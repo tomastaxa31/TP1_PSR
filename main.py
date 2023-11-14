@@ -1,8 +1,8 @@
-#TP1 PSR
 import argparse
 import msvcrt
 import random
 import time
+from termcolor import colored
 
 def wait_for_keypress():
     print("Pressione uma tecla para começar o desafio.")
@@ -12,7 +12,7 @@ def generate_random_input(mode):
     if mode == "char":
         return random.choice('abcdefghijklmnopqrstuvwxyz')
     elif mode == "word":
-        words = ["python", "challenge", "keyboard", "programming", "exercise"]
+        words = ["python", "challenge", "keyboard", "exercise"]
         return random.choice(words)
 
 def main():
@@ -46,16 +46,24 @@ def main():
             random_input = generate_random_input("word" if args.use_words else "char")
             print("Input: {}".format(random_input))
 
-            user_input = msvcrt.getch().decode('utf-8').lower()  # Obtém a entrada do usuário (apenas uma tecla)
+            user_input = msvcrt.getch().decode('utf-8').lower()  # Obtém a entrada do utilizador (apenas uma tecla)
 
             if user_input == ' ':
-                break  # Interrompe o teste se o usuário pressionar a tecla "espaço"
+                break  # Interrompe o teste se o utilizador pressionar a tecla "espaço"
 
             if not args.use_words and user_input != random_input:
-                print("Letra incorreta. Tente novamente.") 
+                print("You typed letter", end=" ")
+                print (colored(user_input, "red"))
+            elif not args.use_words and user_input == random_input:
+                print("You typed letter", end=" ")
+                print (colored(user_input, "green"))
 
-            if args.use_words and len(user_input) != len(random_input):
-                print("Tamanho incorreto. Tente novamente.")
+            if args.use_words and int(user_input) == len(random_input):
+                print("You typed number", end=" ")
+                print (colored(user_input, "green"))
+            elif args.use_words and int(user_input) != len(random_input):
+                print("You typed number", end=" ")
+                print (colored(user_input, "red"))
                 continue
 
             inputs_count += 1
