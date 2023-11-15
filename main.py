@@ -14,6 +14,28 @@ def generate_random_input(mode):
     elif mode == "word":
         words = ["python", "challenge", "keyboard", "exercise"]
         return random.choice(words)
+    
+def test(args):
+    random_input = generate_random_input("word" if args.use_words else "char")
+    print("Input: {}".format(random_input))
+
+    user_input = msvcrt.getch().decode('utf-8').lower()  # Obtém a entrada do utilizador (apenas uma tecla)
+
+    if not args.use_words and user_input != random_input:
+        print("You typed letter", end=" ")
+        print (colored(user_input, "red"))
+    elif not args.use_words and user_input == random_input:
+        print("You typed letter", end=" ")
+        print (colored(user_input, "green"))
+
+    if args.use_words and int(user_input) == len(random_input):
+        print("You typed number", end=" ")
+        print (colored(user_input, "green"))
+    elif args.use_words and int(user_input) != len(random_input):
+        print("You typed number", end=" ")
+        print (colored(user_input, "red"))
+
+    return user_input
 
 def main():
     parser = argparse.ArgumentParser(description="Definition of test mode")
@@ -35,41 +57,28 @@ def main():
 
     start_time = time.time()
     inputs_count = 0
+    #if not args.use_time_mode and inputs_count >= args.max_value:
+        #break
+    if args.use_time_mode:
+        try:
+            while time.time() - start_time < args.max_value:
+                user_input = test(args)
+                if user_input == ' ':
+                    break  
+                inputs_count += 1
+        except KeyboardInterrupt:
+            pass 
+    else :
+        try:
+            while inputs_count < args.max_value:
+                print("here")
+                user_input = test(args)
+                if user_input == ' ':
+                    break
+                inputs_count += 1 
+        except KeyboardInterrupt:
+            pass  
 
-    try:
-        while True:
-            if args.use_time_mode and time.time() - start_time > args.max_value:
-                break
-            elif not args.use_time_mode and inputs_count >= args.max_value:
-                break
-
-            random_input = generate_random_input("word" if args.use_words else "char")
-            print("Input: {}".format(random_input))
-
-            user_input = msvcrt.getch().decode('utf-8').lower()  # Obtém a entrada do utilizador (apenas uma tecla)
-
-            if user_input == ' ':
-                break  # Interrompe o teste se o utilizador pressionar a tecla "espaço"
-
-            if not args.use_words and user_input != random_input:
-                print("You typed letter", end=" ")
-                print (colored(user_input, "red"))
-            elif not args.use_words and user_input == random_input:
-                print("You typed letter", end=" ")
-                print (colored(user_input, "green"))
-
-            if args.use_words and int(user_input) == len(random_input):
-                print("You typed number", end=" ")
-                print (colored(user_input, "green"))
-            elif args.use_words and int(user_input) != len(random_input):
-                print("You typed number", end=" ")
-                print (colored(user_input, "red"))
-                continue
-
-            inputs_count += 1
-
-    except KeyboardInterrupt:
-        pass  # Captura Ctrl+C para sair graciosamente em sistemas Unix-like
 
     print("\nTeste concluído.")
     print("Total de inputs: {}".format(inputs_count))
