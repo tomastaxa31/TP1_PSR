@@ -15,25 +15,35 @@ def generate_random_input(mode):
         words = ["python", "challenge", "keyboard", "exercise"]
         return random.choice(words)
     
+    
 def test(args):
+    dontcheck = 0 #para prevenir erro na linha 34 em int(user_input) caso user input seja um espaco
     random_input = generate_random_input("word" if args.use_words else "char")
     print("Input: {}".format(random_input))
 
     user_input = msvcrt.getch().decode('utf-8').lower()  # Obtém a entrada do utilizador (apenas uma tecla)
+    if user_input == ' ':
+        dontcheck = 1
+    if dontcheck == 0:
+        if not args.use_words:
+            if not args.use_words and user_input != random_input:
+                print("You typed letter", end=" ")
+                print (colored(user_input, "red"))
+            elif not args.use_words and user_input == random_input:
+                print("You typed letter", end=" ")
+                print (colored(user_input, "green"))
 
-    if not args.use_words and user_input != random_input:
-        print("You typed letter", end=" ")
-        print (colored(user_input, "red"))
-    elif not args.use_words and user_input == random_input:
-        print("You typed letter", end=" ")
-        print (colored(user_input, "green"))
+        elif args.use_words:
+            try:
+                if args.use_words and int(user_input) == len(random_input):
+                    print("You typed number", end=" ")
+                    print (colored(user_input, "green"))
+                elif args.use_words and int(user_input) != len(random_input):
+                    print("You typed number", end=" ")
+                    print (colored(user_input, "red"))
+            except ValueError:
+                print("Invalid input. Please enter a number.")
 
-    if args.use_words and int(user_input) == len(random_input):
-        print("You typed number", end=" ")
-        print (colored(user_input, "green"))
-    elif args.use_words and int(user_input) != len(random_input):
-        print("You typed number", end=" ")
-        print (colored(user_input, "red"))
 
     return user_input
 
