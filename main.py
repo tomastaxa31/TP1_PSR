@@ -3,7 +3,7 @@ import msvcrt
 import random
 import time
 from termcolor import colored
-
+from dicio import short_words
 def wait_for_keypress():
     print("Pressione uma tecla para começar o desafio.")
     msvcrt.getch()
@@ -12,7 +12,7 @@ def generate_random_input(mode):
     if mode == "char":
         return random.choice('abcdefghijklmnopqrstuvwxyz')
     elif mode == "word":
-        words = ["python", "challenge", "keyboard", "exercise"]
+        words = short_words
         return random.choice(words)
 
 def test(args, start_time, max_time):
@@ -69,15 +69,23 @@ def main():
     inputs_count = 0
 
     try:
-        while True:
-            user_input = test(args, start_time, args.max_value)
-            if args.use_time_mode and user_input is None:
-                break
+        if args.use_time_mode:
+            while True:
+                user_input = test(args, start_time, args.max_value)
+                if args.use_time_mode and user_input is None:
+                    break
 
-            if user_input == ' ':
-                break
+                if user_input == ' ':
+                    break
 
-            inputs_count += 1
+                inputs_count += 1
+        if not args.use_time_mode:
+            while inputs_count < args.max_value:
+                user_input = test(args, start_time, args.max_value)
+                if user_input == ' ':
+                    break
+                inputs_count += 1
+
     except KeyboardInterrupt:
         pass
 
