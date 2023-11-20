@@ -101,7 +101,7 @@ def test(args):
 
     return inputs, test_start
 
-def calculate_test_statistics(inputs, test_start):
+def calculate_test_statistics(args,inputs, test_start):
     inputs2 = inputs.copy()
     
     if not inputs:
@@ -113,26 +113,31 @@ def calculate_test_statistics(inputs, test_start):
         inputs2[i] = inputs2[i]._replace(duration=modified_duration)
 
     inputs = inputs2.copy()
-
     test_start = test_start
     test_end = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
     test_start_datetime = datetime.strptime(test_start, "%a %b %d %H:%M:%S %Y")
     test_end_datetime = datetime.strptime(test_end, "%a %b %d %H:%M:%S %Y")
-    total_duration = test_end_datetime - test_start_datetime
-    total_duration = total_duration.seconds
+    if args.use_time_mode:
+        total_duration = test_end_datetime - test_start_datetime
+        total_duration = total_duration.seconds
+    else:
+        total_duration = 0
+        for i in range(0, len(inputs)):
+            total_duration += inputs[i].duration
+        total_duration = total_duration
 
     correct_count = sum(1 for i in inputs if i.letter_shown == i.letter_received)
     incorrect_count = len(inputs) - correct_count
 
     accuracy = correct_count / len(inputs) * 100 if inputs else 0
-    average_duration = total_duration / len(inputs) if inputs else 0
+    #average_duration = total_duration / len(inputs) if inputs else 0
 
     type_average_duration = sum(i.duration for i in inputs) / len(inputs) if inputs else 0
     type_hit_average_duration = sum(i.duration for i in inputs if i.letter_shown == i.letter_received) / correct_count if correct_count else 0
     type_miss_average_duration = sum(i.duration for i in inputs if i.letter_shown != i.letter_received) / incorrect_count if incorrect_count else 0
 
     test_stats = TestStatistics(
-        test_duration=total_duration,
+        test_duration=float(total_duration),
         test_start=test_start,
         test_end=test_end,
         number_of_types=len(inputs),
@@ -169,4 +174,4 @@ if __name__ == "__main__":
     inputs, test_start = test(args)
 
     print("\nTest completed.")
-    calculate_test_statistics(inputs, test_start)
+    calculate_test_statistics(args, inputs, test_start)
