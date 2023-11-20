@@ -8,7 +8,7 @@ from termcolor import colored
 from dicio import short_words
 from datetime import datetime
 
-#  namedtuple for the test statistics
+# namedtuple for the test statistics
 Input = namedtuple('Input', ['letter_shown', 'letter_received', 'duration'])
 
 TestStatistics = namedtuple('TestStatistics', [
@@ -51,28 +51,36 @@ def test(args):
         random_input = generate_random_input("word" if args.use_words else "char")
         print(f"Input: {random_input}")
 
-        user_input = msvcrt.getch().decode('utf-8').lower()
+        user_input = None
+
+        while user_input is None and time.time() - start_time <= max_time:
+            if msvcrt.kbhit():
+                user_input = msvcrt.getch().decode('utf-8').lower()
+
+        if user_input is None:
+            break
 
         duration = time.time() - start_time
         if args.use_words:
-            inputs.append(Input(letter_shown=len(random_input), letter_received=int(user_input), duration=duration))
+            try:
+                inputs.append(Input(letter_shown=len(random_input), letter_received=int(user_input), duration=duration))
+            except ValueError:
+                print("Invalid input. Please enter a number.", end=" ")
         else:
             inputs.append(Input(letter_shown=random_input, letter_received=user_input, duration=duration))
 
-        if user_input == ' ':
-            break
-
         if args.use_words:
-            print(user_input)
-            print(len(random_input))
-            is_correct = int(user_input) == len(random_input)
-            if is_correct:
-                print("You typed number", end=" ")
-                print(colored(user_input, "green"))
-            else:
-                print("You typed number", end=" ")
-                print(colored(user_input, "red"))
-        else :
+            try:
+                is_correct = int(user_input) == len(random_input)
+                if is_correct:
+                    print("You typed number", end=" ")
+                    print(colored(user_input, "green"))
+                else:
+                    print("You typed number", end=" ")
+                    print(colored(user_input, "red"))
+            except ValueError:
+                print(" ")
+        else:
             is_correct = user_input == random_input
             if is_correct:
                 print("You typed letter", end=" ")
@@ -81,13 +89,13 @@ def test(args):
                 print("You typed letter", end=" ")
                 print(colored(user_input, "red"))
 
-    return inputs,test_start
+    return inputs, test_start
 
-def calculate_test_statistics(inputs,test_start):
+def calculate_test_statistics(inputs, test_start):
     if not inputs:
         print("No inputs provided.")
         return
-    
+
     test_start = test_start
     test_end = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
     total_duration = inputs[-1].duration - 0.0
@@ -129,8 +137,7 @@ if __name__ == "__main__":
     if args.max_value is None:
         parser.error("-mv is required.")
 
-
-    inputs,test_start = test(args)
+    inputs, test_start = test(args)
 
     print("\nTest completed.")
-    calculate_test_statistics(inputs,test_start)
+    calculate_test_statistics(inputs, test_start)
