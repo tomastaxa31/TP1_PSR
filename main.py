@@ -98,7 +98,10 @@ def calculate_test_statistics(inputs, test_start):
 
     test_start = test_start
     test_end = datetime.now().strftime("%a %b %d %H:%M:%S %Y")
-    total_duration = inputs[-1].duration - 0.0
+    test_start_datetime = datetime.strptime(test_start, "%a %b %d %H:%M:%S %Y")
+    test_end_datetime = datetime.strptime(test_end, "%a %b %d %H:%M:%S %Y")
+    total_duration = test_end_datetime - test_start_datetime
+    total_duration = total_duration.seconds
 
     correct_count = sum(1 for i in inputs if i.letter_shown == i.letter_received)
     incorrect_count = len(inputs) - correct_count
