@@ -180,7 +180,7 @@ if __name__ == "__main__":
             break
 
     if inputs == []:
-        print("\nTest inomplete.")
+        print("\nTest incomplete.")
     else:
         print("\nTest complete.")
     calculate_test_statistics(args, inputs, test_start)
