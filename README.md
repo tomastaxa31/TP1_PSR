@@ -16,3 +16,6 @@ optional arguments:
 
   -uw, --use_words
                         Use word typing mode, instead of single character typing.
+
+  -unlimited, --unlimited
+                        Run the test indefinitely.
