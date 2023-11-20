@@ -170,8 +170,17 @@ if __name__ == "__main__":
     if not args.unlimited and args.max_value is None:
         parser.error("-mv is required unless -unlimited is specified.")
 
-    # Rest of the code remains the same
     inputs, test_start = test(args)
+    while inputs == []:
+        print("\nTest incomplete. If you want to restart press Y, if not, press N")
+        choice = msvcrt.getch().decode('utf-8').lower()
+        if choice == "y":
+            inputs, test_start = test(args)
+        else:
+            break
 
-    print("\nTest completed.")
+    if inputs == []:
+        print("\nTest inomplete.")
+    else:
+        print("\nTest complete.")
     calculate_test_statistics(args, inputs, test_start)
