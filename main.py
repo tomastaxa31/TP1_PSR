@@ -172,7 +172,7 @@ if __name__ == "__main__":
 
     inputs, test_start = test(args)
     while inputs == []:
-        print("\nTest incomplete. If you want to restart press Y, if not, press N")
+        print("\nTest incomplete. If you want to restart press Y, if not, press any other key")
         choice = msvcrt.getch().decode('utf-8').lower()
         if choice == "y":
             inputs, test_start = test(args)
