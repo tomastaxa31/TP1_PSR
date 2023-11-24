@@ -17,7 +17,7 @@ def play_sound(is_correct):
 	else:
 		incorrect_sound.play()
 		
-### Typing test code ....
+### Typing test code we can include here ###....
 
 #Example usage:
 user_input = "a"
