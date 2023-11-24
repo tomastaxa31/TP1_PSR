@@ -7,6 +7,16 @@ from collections import namedtuple
 from termcolor import colored
 from dicio import short_words
 from datetime import datetime
+import pygame
+
+#Iniialize pygame
+pygame.init()
+pygame.mixer.init()
+
+correct_sound = pygame.mixer.Sound ("correct.wav")
+incorrect_sound = pygame.mixer.Sound ("incorrect.wav")
+correct_sound.set_volume(0.3)
+incorrect_sound.set_volume(0.3)
 
 # namedtuple for the test statistics
 Input = namedtuple('Input', ['letter_shown', 'letter_received', 'duration'])
@@ -85,9 +95,15 @@ def test(args):
                 if is_correct:
                     print("You typed number", end=" ")
                     print(colored(user_input, "green"))
+                    if args.use_sound:
+                        correct_sound.play()
+                        time.sleep(1)
                 else:
                     print("You typed number", end=" ")
                     print(colored(user_input, "red"))
+                    if args.use_sound:
+                        incorrect_sound.play()
+                        time.sleep(1)
             except ValueError:
                 print(" ")
         else:
@@ -95,9 +111,15 @@ def test(args):
             if is_correct:
                 print("You typed letter", end=" ")
                 print(colored(user_input, "green"))
+                if args.use_sound:
+                    correct_sound.play()
+                    time.sleep(1)
             else:
                 print("You typed letter", end=" ")
                 print(colored(user_input, "red"))
+                if args.use_sound:
+                    incorrect_sound.play()
+                    time.sleep(1)
 
     return inputs, test_start
 
@@ -158,6 +180,7 @@ if __name__ == "__main__":
     parser.add_argument("-mv", "--max_value", type=int, help="Max number of seconds for time mode or maximum number of inputs for the number of inputs mode.")
     parser.add_argument("-uw", "--use_words", action="store_true", help="Use word typing mode, instead of single character typing.")
     parser.add_argument("-unlimited", "--unlimited", action="store_true", help="Run the test indefinitely.")
+    parser.add_argument("-us", "--use_sound", action="store_true", help="Use sound on correct and incorrect answers.")
 
     args = parser.parse_args()
 
