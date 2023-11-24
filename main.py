@@ -15,8 +15,8 @@ pygame.mixer.init()
 
 correct_sound = pygame.mixer.Sound ("correct.wav")
 incorrect_sound = pygame.mixer.Sound ("incorrect.wav")
-correct_sound.set_volume(0.3)
-incorrect_sound.set_volume(0.3)
+correct_sound.set_volume(0.2)
+incorrect_sound.set_volume(0.2)
 
 # namedtuple for the test statistics
 Input = namedtuple('Input', ['letter_shown', 'letter_received', 'duration'])
