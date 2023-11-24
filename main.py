@@ -183,8 +183,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.use_sound :
-        if args.use_sound < 0.1 or args.use_sound > 1.0:
-            parser.error("Value of use sound should be between 0 and 1.0")
+        if args.use_sound < 0.1 or args.use_sound > 1:
+            parser.error("Value of use sound should be between 0 and 1")
 
     if args.unlimited and args.use_time_mode:
         parser.error("-unlimited and -utm are mutually exclusive.")
