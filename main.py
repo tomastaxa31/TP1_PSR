@@ -15,8 +15,6 @@ pygame.mixer.init()
 
 correct_sound = pygame.mixer.Sound ("correct.wav")
 incorrect_sound = pygame.mixer.Sound ("incorrect.wav")
-correct_sound.set_volume(0.2)
-incorrect_sound.set_volume(0.2)
 
 # namedtuple for the test statistics
 Input = namedtuple('Input', ['letter_shown', 'letter_received', 'duration'])
@@ -180,9 +178,12 @@ if __name__ == "__main__":
     parser.add_argument("-mv", "--max_value", type=int, help="Max number of seconds for time mode or maximum number of inputs for the number of inputs mode.")
     parser.add_argument("-uw", "--use_words", action="store_true", help="Use word typing mode, instead of single character typing.")
     parser.add_argument("-unlimited", "--unlimited", action="store_true", help="Run the test indefinitely.")
-    parser.add_argument("-us", "--use_sound", action="store_true", help="Use sound on correct and incorrect answers.")
+    parser.add_argument("-us", "--use_sound",type=float, help="Use sound on correct and incorrect answers.")
 
     args = parser.parse_args()
+
+    if args.use_sound < 0.1 or args.use_sound > 1.0:
+        parser.error("Value of use sound should be between 0.1 and 1.0")
 
     if args.unlimited and args.use_time_mode:
         parser.error("-unlimited and -utm are mutually exclusive.")
@@ -193,6 +194,9 @@ if __name__ == "__main__":
     if not args.unlimited and args.max_value is None:
         parser.error("-mv is required unless -unlimited is specified.")
 
+    
+    correct_sound.set_volume(args.use_sound)
+    incorrect_sound.set_volume(args.use_sound)
     inputs, test_start = test(args)
     while inputs == []:
         print("\nTest incomplete. If you want to restart press Y, if not, press any other key")
