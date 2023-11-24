@@ -182,8 +182,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.use_sound < 0.1 or args.use_sound > 1.0:
-        parser.error("Value of use sound should be between 0.1 and 1.0")
+    if args.use_sound :
+        if args.use_sound < 0.1 or args.use_sound > 1.0:
+            parser.error("Value of use sound should be between 0 and 1.0")
 
     if args.unlimited and args.use_time_mode:
         parser.error("-unlimited and -utm are mutually exclusive.")
@@ -194,9 +195,9 @@ if __name__ == "__main__":
     if not args.unlimited and args.max_value is None:
         parser.error("-mv is required unless -unlimited is specified.")
 
-    
-    correct_sound.set_volume(args.use_sound)
-    incorrect_sound.set_volume(args.use_sound)
+    if args.use_sound:
+        correct_sound.set_volume(args.use_sound)
+        incorrect_sound.set_volume(args.use_sound)
     inputs, test_start = test(args)
     while inputs == []:
         print("\nTest incomplete. If you want to restart press Y, if not, press any other key")
